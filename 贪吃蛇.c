@@ -4,12 +4,19 @@
 #include <conio.h>
 #include <graphics.h>
 #include <stdlib.h>
-#include <mmsystem.h>//×ÔÃ½ÌåÍ·ÎÄ¼ş
-#pragma comment(lib,"winmm.lib")//×ÔÃ½ÌåÍ·ÎÄ¼ş
-#define SNAKE_NUM 500    //ÉßµÄ×î´ó½ÚÊı
+#include <mmsystem.h>//è‡ªåª’ä½“å¤´æ–‡ä»¶
+#pragma comment(lib,"winmm.lib")//è‡ªåª’ä½“å¤´æ–‡ä»¶
+#define SNAKE_NUM 500    //è›‡çš„æœ€å¤§èŠ‚æ•°
 
 
-enum dio    //ÉßµÄ·½Ïò
+enum tes
+{
+	xgs,
+	xgs1,
+	xgs2,
+};
+
+enum dio    //è›‡çš„æ–¹å‘
 {
 	up,
 	down,
@@ -19,10 +26,10 @@ enum dio    //ÉßµÄ·½Ïò
 
 struct Snake
 {
-	int size; //ÉßµÄ½ÚÊı
-	int dir;    //ÉßµÄ·½Ïò
-	int speed;  //ÒÆ¶¯ËÙ¶È
-	POINT coor[SNAKE_NUM];//ÉßµÄ×ø±ê
+	int size; //è›‡çš„èŠ‚æ•°
+	int dir;    //è›‡çš„æ–¹å‘
+	int speed;  //ç§»åŠ¨é€Ÿåº¦
+	POINT coor[SNAKE_NUM];//è›‡çš„åæ ‡
   
 }snake;
 
@@ -30,22 +37,22 @@ struct food
 {
 	int x;
 	int y;    
-	int r;         //Ê³Îï°ë¾¶aaa
-	bool flag;     //Ê³ÎïÊÇ·ñ±»³Ô
-	DWORD color;   //Ê³ÎïÑÕÉ«
+	int r;         //é£Ÿç‰©åŠå¾„aaa
+	bool flag;     //é£Ÿç‰©æ˜¯å¦è¢«åƒ
+	DWORD color;   //é£Ÿç‰©é¢œè‰²
 }food;
 
 
-//ÉßµÄ³õÊ¼»¯
+//è›‡çš„åˆå§‹åŒ–
 void GameInit()
 {
 	//BGM
 	mciSendString("open ./res/lll.mp3", 0, 0, 0);
 	mciSendString("play /res/lll.mp3 repeat", 0, 0, 0);
-	//init³õÊ¼»¯ graph Í¼ĞÎ´°¿Ú
-	//´´½¨Ò»¸ö´°¿Ú
+	//initåˆå§‹åŒ– graph å›¾å½¢çª—å£
+	//åˆ›å»ºä¸€ä¸ªçª—å£
 	initgraph(640, 480);
-	//ÉèÖÃËæ»úÊı
+	//è®¾ç½®éšæœºæ•°
 	srand(GetTickCount());
 	snake.size = 5;
 	snake.speed = 10;
@@ -64,34 +71,34 @@ void GameInit()
 
 void GameDraw()
 {
-	//·ÀÖ¹ÉÁÆÁ Ë«»º³å
+	//é˜²æ­¢é—ªå± åŒç¼“å†²
 	BeginBatchDraw();
-	//±³¾°ÑÕÉ«
+	//èƒŒæ™¯é¢œè‰²
 	setbkcolor(RGB(28, 115, 119));
 	cleardevice();
-	//»æÖÆÉß
+	//ç»˜åˆ¶è›‡
 	setfillcolor(GREEN);
 	for (int i = 0; i < snake.size; i++)
 	{
 		solidcircle(snake.coor[i].x, snake.coor[i].y, 5);
 
 	}
-	//»æÖÆÊ³Îï
+	//ç»˜åˆ¶é£Ÿç‰©
 	if (food.flag)
 	{
 		solidcircle(food.x, food.y, food.r);
 	}
-	EndBatchDraw();//Ë«»º³å½áÊø
+	EndBatchDraw();//åŒç¼“å†²ç»“æŸ
 }
 
 void snakeMove()     
 {
-	//Éí×Ó¸ú×ÅÍ·
+	//èº«å­è·Ÿç€å¤´
 	for (int i = snake.size-1; i > 0 ; i--)
 	{
 		snake.coor[i] = snake.coor[i-1];
 	}
-	//ÉßµÄÒÆ¶¯
+	//è›‡çš„ç§»åŠ¨
 		switch (snake.dir)
 		{
 		case up:
@@ -136,7 +143,7 @@ void anjian()
 		case'72':
 			if (snake.dir != down)
 			{
-				snake.dir = up;//¸Ä±ä·½Ïò
+				snake.dir = up;//æ”¹å˜æ–¹å‘
 			}
 			break;
 		case's':
@@ -144,7 +151,7 @@ void anjian()
 		case'80':
 			if (snake.dir != up)
 			{
-				snake.dir = down;//¸Ä±ä·½Ïò
+				snake.dir = down;//æ”¹å˜æ–¹å‘
 			}
 			
 			break;
@@ -153,7 +160,7 @@ void anjian()
 		case'75':
 			if (snake.dir != right)
 			{
-				snake.dir = left;//¸Ä±ä·½Ïò
+				snake.dir = left;//æ”¹å˜æ–¹å‘
 			}
 			
 			break;
@@ -162,11 +169,11 @@ void anjian()
 		case'77':
 			if (snake.dir != left)
 			{
-				snake.dir = right; //¸Ä±ä·½Ïò
+				snake.dir = right; //æ”¹å˜æ–¹å‘
 			}
 			
 			break;
-		case ' '://ÔİÍ£
+		case ' '://æš‚åœ
 				while (1)
 				{
 					if (_getch() == ' ')
